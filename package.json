@@ -1,0 +1,26 @@
+{
+  "name": "mento",
+  "version": "1.0.0",
+  "description": "chat app to explore socket programming",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pankushg/Mento.git"
+  },
+  "keywords": [
+    "chat"
+  ],
+  "author": "Pankush",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pankushg/Mento/issues"
+  },
+  "homepage": "https://github.com/Pankushg/Mento#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
