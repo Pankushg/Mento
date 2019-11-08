@@ -9,18 +9,25 @@ let server = app.listen(port,()=>{
     console.log(`Listening at port ${port}`)
 });
 
-app.use(express.static('public'));
+//app.use(express.static('public'));
+
+app.get('/',(req,res)=>{
+    res.sendFile(__dirname+'/public/');
+})
 
 let io = socket(server);
 
 io.on('connection',(socket)=>{
-    console.log('Socket Connection Established : '+socket.id);
-    socket.join(['room1'],(err)=>{
-        if(err) console.log(err);
-        else console.log(`room joined`);
-    })
-   
+    console.log('Socket Connection Established : ' + socket.id);
+    socket.on('joinRoom',(data)=>{
+        socket.join(data.handle,err=>{
+            if(err) throw err;
+            else {io.emit('joinRoom',data);}
+            console.log(socket.rooms);
+        });
+    });
+
     socket.on('chat',(data)=>{
-        io.sockets.emit('chat', data);
+        io.sockets.in(data.handle).emit('chat', data);
     });
 });
