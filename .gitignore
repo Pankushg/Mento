@@ -60,4 +60,5 @@ Momento/e2e/protractor.conf.js
 Momento/e2e/tsconfig.json
 Momento/e2e/src/app.e2e-spec.ts
 Momento/e2e/src/app.po.ts
+/public
 

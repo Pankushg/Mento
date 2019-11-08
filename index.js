@@ -1,5 +1,6 @@
 const express = require('express');
 const socket = require('socket.io');
+const path = require('path');
 
 const port = 3000;
 
@@ -9,11 +10,7 @@ let server = app.listen(port,()=>{
     console.log(`Listening at port ${port}`)
 });
 
-//app.use(express.static('public'));
-
-app.get('/',(req,res)=>{
-    res.sendFile(__dirname+'/public/');
-})
+app.use(express.static(path.join(__dirname,'public')));
 
 let io = socket(server);
 
