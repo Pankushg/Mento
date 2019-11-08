@@ -1,1 +1,63 @@
 /node_modules
+Momento/node_modules
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
+
+# dependencies
+/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+Momento/browserslist
+Momento/.editorconfig
+Momento/angular.json
+Momento/karma.conf.js
+Momento/package.json
+Momento/package-lock.json
+Momento/tsconfig.json
+Momento/tsconfig.app.json
+Momento/tsconfig.spec.json
+Momento/tslint.json
+Momento/e2e/protractor.conf.js
+Momento/e2e/tsconfig.json
+Momento/e2e/src/app.e2e-spec.ts
+Momento/e2e/src/app.po.ts
+
