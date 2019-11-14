@@ -18,17 +18,24 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
   
+  errMsg;
+
   registerForm = new FormGroup({
     userName: new FormControl(''),
   });
 
   registerUser(){
+    this.errMsg = undefined;
     this.registerService.register(
       {
         userName : this.registerForm.get('userName').value
       }).subscribe(data => {
         if(data.success){
           this.router.navigate(['usersList']);
+          console.log(`${data.userName} registered successfully`);
+        } else {
+          this.errMsg=data.msg;
+          console.log(`${data.userName} already registered`);
         }
     });
     console.log('Register User request sent to Register service');

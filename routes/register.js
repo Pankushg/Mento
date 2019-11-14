@@ -6,11 +6,18 @@ const router = express.Router();
 
 router.post('/',(req, res)=>{
     console.log(`${req.body.userName} register request processing...`);
-    status = data.register(req.body.userName);
-    if(status==true){
+    result = data.register(req.body.userName);
+    if(result.success){
         res.send(JSON.stringify({
-            success : true,
-            userName :  req.body.userName
+            success : result.success,
+            index : result.index,
+            userName :  req.body.userName,
+        }));
+    } else{
+        res.send(JSON.stringify({
+            success : false,
+            userName :  req.body.userName,
+            msg : result.msg,
         }));
     }
 });

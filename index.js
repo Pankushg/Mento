@@ -5,6 +5,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const register = require('./routes/register')
+const users = require('./routes/users')
+const chats = require('./routes/chats')
 
 const port = 3000;
 
@@ -24,6 +26,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors());
 
 app.use('/register',register);
+app.use('/users',users);
+app.use('/chats',chats);
 
 //Socket Connection Handling
 let io = socket(server);

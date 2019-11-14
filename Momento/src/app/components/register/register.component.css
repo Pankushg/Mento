@@ -7,3 +7,6 @@
 input{
     text-align: center;
 }
+#error{
+    color: palevioletred !important; 
+}

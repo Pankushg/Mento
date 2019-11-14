@@ -16,8 +16,10 @@
             autocomplete="off"
             required
             minlength="5"
-            maxlength="8">
-        <small id="emailHelp" class="form-text text-muted">be creative!!!</small>
+            maxlength="8"
+            (input)="errMsg=undefined;">
+        <small *ngIf="!errMsg" id="quote" class="form-text text-muted">be creative !!!</small>
+        <small *ngIf="errMsg"  id="error" class="form-text text-muted">{{errMsg}}</small>
         <br>
         <button type="submit" class="btn btn-primary" [disabled]="registerForm.status=='INVALID'">Submit</button>
     </form>
