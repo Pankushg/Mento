@@ -3,6 +3,8 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Observable,of } from 'rxjs';
 import { UserChatService } from '../../services/user-chat.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-user-chat',
@@ -11,35 +13,58 @@ import { UserChatService } from '../../services/user-chat.service';
 })
 export class UserChatComponent implements OnInit {
 
+  chatForm = new FormGroup({
+    chatMessage: new FormControl(''),
+  });
+
+  chats:any;
+  userId:any;
+  sender:true;
+  userIds:Observable<any>;
+  data:{message:string,handle:string};
+  hero:Observable<[{name:'Pankush'},{name:'nidhi'}]>
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userChatService: UserChatService,
+    private socketService: SocketService,
   ) {}
 
-  chats:any;
-  userId:any;
-  userIds:Observable<any>
-  hero:Observable<[{name:'Pankush'},{name:'nidhi'}]>
+  ngOnInit() {
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        return this.userChatService.getChats(params.get('id'));
+      })).subscribe(value => {
+      console.log(value); 
+      if(value.success=='true'){
+      }else{}
+    });
+
+    //Joinging Room
+    this.socketService.emit("joinRoom","dummyRoom");
+    this.socketService.listen("joinRoom").subscribe((data)=>{
+      console.log(data + " Joined");
+    });
+
+    this.socketService.listen("chat").subscribe((data:{message:string,handle:string})=>{
+      let fragment = document.createDocumentFragment(),
+        tempElement = document.createElement('div');
+      tempElement.innerHTML = "<div id='message'>" + data.message +"!</div>";
+      while (tempElement.firstChild) {
+        fragment.appendChild(tempElement.firstChild);
+      }
+      document.getElementById("chat-messages").appendChild(fragment)
+    });
+  }
 
   getData(data):Observable<any>{
     return of(this.hero);
   }
 
-  ngOnInit() {
-    /* this.chat = this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.service.getHero(params.get('id')))); */
-    this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        return this.userChatService.getChats(params.get('id'));
-      })
-    ).subscribe(value => {
-      console.log(value);
-      if(value.success=='true'){
-
-      }else{
-      }
-    });
+  sendMessage(){
+    let message = this.chatForm.get('chatMessage').value
+    console.log(message);
+    this.socketService.emit("chat",{message:this.chatForm.get('chatMessage').value,handle:"dummyRoom"});
   }
 }

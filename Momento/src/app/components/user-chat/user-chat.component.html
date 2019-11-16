@@ -1,0 +1,28 @@
+<div class="container">
+    <nav class="navbar sticky-top navbar-light bg-light">
+        <a class="navbar-brand">Mento</a>
+    </nav>
+    <div class="chat-box">
+        
+        <div class="chat-messages" id="chat-messages"></div>
+
+        <form [formGroup]='chatForm' (ngSubmit)="sendMessage()">
+            <input
+                type="text" 
+                id="chat-message" 
+                class="form-control" 
+                formControlName="chatMessage"
+                placeholder="Enter Message" 
+                aria-describedby="chatMessage" 
+                autocomplete="off"
+                required>
+            <button 
+                type="submit" 
+                class="btn btn-primary" 
+                [disabled]="chatForm.status=='INVALID'">
+                    Send
+            </button>
+        </form>
+
+    </div>
+</div>

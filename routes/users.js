@@ -1,13 +1,38 @@
-const express = require('express')
+const express = require('express');
+const mongoose = require('mongoose');
 
-const data = require('../data')
+const data = require('../data');
+const User = require('../models/user');
 
 let router = express.Router();
 
 router.get('/',(req, res)=>{
     console.log('server fetching users list');
-    result = data.getUsers();
-    res.send(JSON.stringify(result))
-});
+    console.log(req.body);
+    let loggeedInUser = new User({
+        id: req.body._id,
+        username:req.body.userName
+    });
 
+    User.getUsersByUserId(loggeedInUser,(err, users)=>{
+        if(err) throw err;
+        else if(users == null){
+            console.log("No Userd Found");
+            res.send(
+                JSON.stringify({
+                    success:false,
+                    msg:"No Users Found"
+                })
+            );
+        } else{
+            console.log(users);
+            res.send(
+                JSON.stringify({
+                    success:true,
+                    users:users
+                })
+            );
+        }
+    });
+});
 module.exports = router;

@@ -30,12 +30,16 @@ export class RegisterComponent implements OnInit {
       {
         userName : this.registerForm.get('userName').value
       }).subscribe(data => {
+        console.log(data);
         if(data.success){
-          this.router.navigate(['usersList']);
-          console.log(`${data.userName} registered successfully`);
+          this.router.navigate(['usersList',data.user]).then(err=>{
+            if(err) console.log(err);
+            else console.log(this.router);
+          });
+          console.log(`${data.user.username} registered successfully`);
         } else {
           this.errMsg=data.msg;
-          console.log(`${data.userName} already registered`);
+          console.log(`${this.registerForm.get('userName').value} already registered`);
         }
     });
     console.log('Register User request sent to Register service');

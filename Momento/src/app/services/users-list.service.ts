@@ -11,9 +11,9 @@ export class UsersListService {
 
   readonly uri = 'http://localhost:3000/users';
 
-  getUsers():Observable<any>{
-    console.log('Fetching users from server');
-    return this.httpClient.get<any>(this.uri);
+  getUsers(user):Observable<any>{
+    console.log('Fetching users from server for: '+user);
+    return this.httpClient.get<any>(this.uri,user);
   }
 
 }
