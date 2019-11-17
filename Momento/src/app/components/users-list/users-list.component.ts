@@ -11,6 +11,8 @@ import { Observable,of } from 'rxjs';
 })
 export class UsersListComponent implements OnInit {
 
+  private availableUsers:[{id:string, username:string}]
+
   constructor( 
     private route: ActivatedRoute,
     private usersListService : UsersListService
@@ -20,9 +22,15 @@ export class UsersListComponent implements OnInit {
   ) {
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
-        return this.usersListService.getUsers(params.get('_id'));
+        let user = {
+          id : params.get('_id'),
+          username : params.get('username')
+        }
+        return this.usersListService.getUsers(user);
       })).subscribe(value => {
-      console.log(value); 
+      console.log(value);
+      this.availableUsers=value.users;
+      console.log(this.availableUsers)
     });
   }
 

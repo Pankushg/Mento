@@ -27,8 +27,10 @@ module.exports.getUserByUsername=(newUser,callback)=>{
 }
 
 module.exports.getUsersByUserId=(loggedInUser,callback)=>{
-    const query = {username:!loggedInUser.username}
-    User.findOne(query,callback)
+    console.log('searching users in db ' + loggedInUser.id)
+    const query = {_id: loggedInUser.id}
+    //User.findOne(query,callback)
+    User.find({_id : { $ne: loggedInUser.id }},callback);
 }
 
 module.exports.getUserById=(id,callback)=>{

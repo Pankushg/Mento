@@ -32,10 +32,7 @@ export class RegisterComponent implements OnInit {
       }).subscribe(data => {
         console.log(data);
         if(data.success){
-          this.router.navigate(['usersList',data.user]).then(err=>{
-            if(err) console.log(err);
-            else console.log(this.router);
-          });
+          this.router.navigate(['usersList',data.user]);
           console.log(`${data.user.username} registered successfully`);
         } else {
           this.errMsg=data.msg;

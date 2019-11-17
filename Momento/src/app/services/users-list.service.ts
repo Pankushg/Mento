@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,13 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class UsersListService {
 
-  constructor(private httpClient : HttpClient) { }
+  constructor(
+    private httpClient : HttpClient,
+  ) { }
 
   readonly uri = 'http://localhost:3000/users';
 
   getUsers(user):Observable<any>{
-    console.log('Fetching users from server for: '+user);
-    return this.httpClient.get<any>(this.uri,user);
+    console.log('Fetching users from server for: ');
+    console.log(user)  
+    return this.httpClient.get<any>(this.uri,{params:{id:user.id, username:user.username}});
   }
 
 }
