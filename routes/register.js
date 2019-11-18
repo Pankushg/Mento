@@ -17,13 +17,18 @@ router.post('/',(req, res)=>{
     User.getUserByUsername(newUser,(err, user)=>{
         if(err) throw err;
         else if(user != null){
-            console.log(newUser.username + " already registered");
+           /*  console.log(newUser.username + " already registered");
             res.send(
                 JSON.stringify({
                     success:false,
                     msg:"Username already present"
                 })
-            );
+            ); */
+            res.json({
+                success:true ,
+                user : user,
+                msg: 'User Logged In successfully!!'
+            });
         }
         else {
             console.log(newUser.username + " added");

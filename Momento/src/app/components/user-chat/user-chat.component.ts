@@ -17,6 +17,7 @@ export class UserChatComponent implements OnInit {
     chatMessage: new FormControl(''),
   });
 
+  private room: string;
   chats:any;
   userId:any;
   sender:true;
@@ -32,21 +33,32 @@ export class UserChatComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.pipe(
+    /* this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
         return this.userChatService.getChats(params.get('id'));
       })).subscribe(value => {
-      console.log(value); 
+        console.log("fdssdS"); 
+        console.log(value); 
       if(value.success=='true'){
+      }else{}
+    }); */
+
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        this.room=params.get('id');
+        return params.get('id2')
+      })).subscribe(value => {
+        console.log("fdssdS"); 
+        console.log(value); 
+      if(true){
       }else{}
     });
 
     //Joinging Room
-    this.socketService.emit("joinRoom","dummyRoom");
     this.socketService.listen("joinRoom").subscribe((data)=>{
       console.log(data + " Joined");
     });
-
+    this.socketService.emit("joinRoom","");
     this.socketService.listen("chat").subscribe((data:{message:string,handle:string})=>{
       let fragment = document.createDocumentFragment(),
         tempElement = document.createElement('div');

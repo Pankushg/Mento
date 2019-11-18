@@ -8,7 +8,7 @@ let router = express.Router();
 
 router.get('/',(req, res)=>{
     console.log('server fetching users list');
-    console.log(req);
+    console.log(req.query);
 
     let loggedInUser = {
         id:req.query.id,
@@ -16,9 +16,10 @@ router.get('/',(req, res)=>{
     }
 
     User.getUsersByUserId(loggedInUser,(err, users)=>{
+        console.log(users);
         if(err) throw err;
-        else if(users.users == null){
-            console.log("No Userd Found");
+        else if(users == null){
+            console.log("No Users Found");
             res.send(
                 JSON.stringify({
                     success:false,
@@ -26,7 +27,6 @@ router.get('/',(req, res)=>{
                 })
             );
         } else{
-            console.log(users);
             res.send(
                 JSON.stringify({
                     success:true,

@@ -1,6 +1,8 @@
-<div class="container">
+<div class="container">{{abc}}
     <nav class="navbar sticky-top navbar-light bg-light">
         <a class="navbar-brand">Mento</a>
+        <!--Style pending for below div for Logged in user-->
+        <div style="float: right; font: bold; color: darkslategray">{{loggedInUser.username}}</div>
     </nav>
     <div class='list' *ngFor='let user of users'>
         <!-- <div class="input-group mb-3" id="group">
@@ -24,7 +26,7 @@
 <!--         <input type="button" class="btn" [value]="user.username">
  --></div>
  <ul class="list-group list-group-flush" *ngFor="let user of availableUsers">
-        <a [routerLink]="['/chat',user.index]" routerLinkActive="active" (click)="userClicked()" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a (dblclick)="userClicked(user)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             {{user.username}}
             <span class="badge badge-primary badge-pill">{{user._id}}</span>
         </a>

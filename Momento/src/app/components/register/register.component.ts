@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { RegisterService } from "../../services/register.service";
 import { RouterLink, RouteConfigLoadEnd, ActivatedRoute,Router } from '@angular/router';
+import { DataControllerService } from "../../services/data-controller.service";
 
 @Component({
   selector: 'app-register',
@@ -13,6 +14,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private registerService : RegisterService,
     private router : Router,
+    private dataControllerService : DataControllerService,
   ) { }
 
   ngOnInit() {
@@ -32,7 +34,9 @@ export class RegisterComponent implements OnInit {
       }).subscribe(data => {
         console.log(data);
         if(data.success){
-          this.router.navigate(['usersList',data.user]);
+          this.dataControllerService.setLoggedInUserData({id: data.user._id, username: data.user.username});
+          console.log(this.dataControllerService.getLoggedInUserData());
+          this.router.navigate(['usersList']);
           console.log(`${data.user.username} registered successfully`);
         } else {
           this.errMsg=data.msg;
