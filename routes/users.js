@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 const data = require('../data');
 const User = require('../models/user');
@@ -35,5 +36,10 @@ router.get('/',(req, res)=>{
             );
         }
     });
+});
+
+router.get('/authRoute',passport.authenticate('jwt', {session: false}),(req, res, next)=>{
+    console.log('authRoute')
+    res.json({user: req.user});
 });
 module.exports = router;

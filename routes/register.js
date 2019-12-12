@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const data = require('../data');
 const User = require('../models/user');
+const config = require('../config/db');
 
 const router = express.Router();
 
@@ -24,8 +26,12 @@ router.post('/',(req, res)=>{
                     msg:"Username already present"
                 })
             ); */
+            const token = jwt.sign({data: user}, config.secret, {
+                expiresIn: 604800 // 1 week
+            });
             res.json({
                 success:true ,
+                token: 'Bearer '+token,
                 user : user,
                 msg: 'User Logged In successfully!!'
             });
@@ -37,11 +43,17 @@ router.post('/',(req, res)=>{
                     success:false ,
                     msg: 'Failed to register user'
                 });
-                else res.json({
-                    success:true ,
-                    user : user,
-                    msg: 'User registered successfully!!'
-                });
+                else {
+                    const token = jwt.sign({data: user}, config.secret, {
+                        expiresIn: 604800 // 1 week
+                    });
+                    res.json({
+                        success:true ,
+                        token: 'Bearer '+token,
+                        user : user,
+                        msg: 'User registered successfully!!'
+                    });
+                }
             });
         }
     });

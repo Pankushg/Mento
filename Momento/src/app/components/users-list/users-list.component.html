@@ -1,4 +1,4 @@
-<div class="container">{{abc}}
+<div class="container">
     <nav class="navbar sticky-top navbar-light bg-light">
         <a class="navbar-brand">Mento</a>
         <!--Style pending for below div for Logged in user-->
@@ -25,10 +25,13 @@
               
 <!--         <input type="button" class="btn" [value]="user.username">
  --></div>
- <ul class="list-group list-group-flush" *ngFor="let user of availableUsers">
-        <a (dblclick)="userClicked(user)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+ <div *ngIf="availableUsers">
+    <ul class="list-group list-group-flush" *ngFor="let user of availableUsers">
+        <a (click)="userClicked(user)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             {{user.username}}
             <span class="badge badge-primary badge-pill">{{user._id}}</span>
         </a>
     </ul>
+ </div>
+
 </div>

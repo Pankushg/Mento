@@ -1,12 +1,17 @@
 <div class="container">
     <nav class="navbar sticky-top navbar-light bg-light">
         <a class="navbar-brand">Mento</a>
+        <div *ngIf="clickedUser && loggedInUser" style="float: right; font: bold; color: darkslategray">
+            {{loggedInUser.username}} to {{clickedUser.username}}</div>
     </nav>
     <div class="chat-box">
-        
+        <!-- <div class="chat-messages">
+            <div class="s-message-layout"></div>
+            <div class="r-message-layout"></div>
+        </div> -->
         <div class="chat-messages" id="chat-messages"></div>
 
-        <form [formGroup]='chatForm' (ngSubmit)="sendMessage()">
+        <form class="chat-form" [formGroup]='chatForm' (ngSubmit)="sendMessage()">
             <input
                 type="text" 
                 id="chat-message" 

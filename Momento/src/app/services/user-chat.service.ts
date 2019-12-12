@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,11 +8,23 @@ import { Observable } from 'rxjs';
 export class UserChatService {
 
   constructor(
-    private http : HttpClient
+    private httpClient : HttpClient
   ) { }
 
-  readonly uri = 'http://localhost:3000/chats'
+  readonly chatsUri: string = 'http://localhost:3000/chats';
+  readonly authUsersUri: string = 'http://localhost:3000/chats/authRoute';
+
   getChats(id:any):Observable<any>{
-    return this.http.get(this.uri);
+    return this.httpClient.get(this.chatsUri);
+  }
+
+  authenticateChatsRoute(){
+    const headers = new HttpHeaders({
+      'Content-Type' : 'application/json',
+      'Authorization' : window.localStorage.getItem('id_token'),
+    });
+    console.log('chat service');
+    console.log(window.localStorage.getItem('username'));
+    return this.httpClient.get<any>(this.authUsersUri,{headers: headers});
   }
 }

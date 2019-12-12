@@ -10,16 +10,18 @@ export class DataControllerService {
 
   private loggedInUserData: {username:string,id:string};
   private availableUsersData: [{username:string,_id:string}];
+  private privateRoomId: {id:string};
 
   private loggedInUserDataChange: Subject<{username:string,id:string}>= new Subject<{username:string,id:string}>();
   private availableUsersDataChange: Subject<[{username:string,_id:string}]>= new Subject<[{username:string,_id:string}]>();
+  private privateRoomIdChange: Subject<{id:string}>= new Subject<{id:string}>();
   
   getLoggedInUserData() : {username:string,id:string}{
     return this.loggedInUserData;
   }
   setLoggedInUserData(loggedInUserData : {username:string,id:string}){
-    window.localStorage.setItem("id",loggedInUserData.id);
-    window.localStorage.setItem("username",loggedInUserData.username);
+    //window.localStorage.setItem("id",loggedInUserData.id);
+   //window.localStorage.setItem("username",loggedInUserData.username);
     this.loggedInUserDataChange.next(this.loggedInUserData=loggedInUserData);
   }
   
@@ -28,5 +30,12 @@ export class DataControllerService {
   }
   setAvailableUsersData(availableUsersData : [{username:string,_id:string}]){
     this.availableUsersDataChange.next(this.availableUsersData=availableUsersData);
+  }
+
+  getPrivateRoomId() : {id:string}{
+    return this.privateRoomId;
+  }
+  setPrivateRoomId(privateRoomId : {id:string}){
+    this.privateRoomIdChange.next(this.privateRoomId=privateRoomId);
   }
 }

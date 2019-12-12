@@ -13,7 +13,7 @@ import { SocketService } from "../../services/socket.service";
 })
 export class UsersListComponent implements OnInit {
 
-  private loggedInUser : {id:string, username: string}
+  private loggedInUser : {_id:string, username: string}
   private availableUsers : [{_id:string, username: string}]
 
   constructor( 
@@ -24,31 +24,41 @@ export class UsersListComponent implements OnInit {
     private socketService: SocketService,
   ) {}
 
-  abc="";
-
   ngOnInit() {
-    if(this.dataControllerService.getLoggedInUserData()!=undefined)
+    /* if(this.dataControllerService.getLoggedInUserData()!=undefined)
       this.loggedInUser=this.dataControllerService.getLoggedInUserData();
     else if(window.localStorage.getItem("username")!=undefined){
       console.log(window.localStorage);
       this.loggedInUser={id: window.localStorage.getItem("id"), username: window.localStorage.getItem("username")};
-    }
-    this.usersListService.getUsers(this.loggedInUser).subscribe(data=>{
-      this.availableUsers=data.users;
-      this.dataControllerService.setAvailableUsersData(this.availableUsers);
-      this.availableUsers.forEach(element => {
-        console.log(element._id);
-        let privateRoom = element._id+" "+this.loggedInUser.id;
-        this.socketService.emit("readyRoom",privateRoom)
+    } */
+    console.log(window.localStorage.getItem('username'));
+    this.loggedInUser = {_id: window.localStorage.getItem('id'), username: window.localStorage.getItem('username')};
+    this.usersListService.authenticateUsersRoute().subscribe(profile=>{
+      //this.user=profile.user;
+      console.log(profile);
+      this.loggedInUser.username=profile.user.username;
+      this.loggedInUser._id=profile.user._id;
+      this.usersListService.getUsers(this.loggedInUser).subscribe(data=>{
+        console.log(data);
+        this.availableUsers=data.users;
+        this.dataControllerService.setAvailableUsersData(this.availableUsers);
+        this.availableUsers.forEach(element => {
+          console.log(element._id);
+          let privateRoom = element._id+" "+this.loggedInUser._id;
+          this.socketService.emit("readyRoom",privateRoom)
+        });
+        console.log(this.dataControllerService.getAvailableUsersData())
       });
-      console.log(this.dataControllerService.getAvailableUsersData())
+      this.socketService.listen("roomReady").subscribe((data)=>{
+        console.log(data + " Joined");
+      });
+    },err=>{
+      console.log(err);
+      this.router.navigate(['register'])
+      return false;
     });
-    this.socketService.listen("roomReady").subscribe((data)=>{
-      console.log(data + " Joined");
-    });
-    this.socketService.listen("knocKnock").subscribe((data)=>{
-      this.abc=this.abc+"data";
-    });
+    /* this.socketService.listen("knocKnock").subscribe((data)=>{
+    }); */
   }
  /*  usersList(){
     this.usersListService.getUsers().subscribe(data=>{
@@ -62,9 +72,11 @@ export class UsersListComponent implements OnInit {
   userClicked(user){
     let userClicked = user;
     let loggedInUser = this.loggedInUser;
-    let privateRoom = loggedInUser.id+" "+userClicked._id;
-    this.socketService.emit("knocKnock",privateRoom)
-    /* let loggedInUser
-    this.router.navigate(['/chat']); */
+    let privateRoomId = loggedInUser._id+" "+userClicked._id;
+    this.dataControllerService.setPrivateRoomId({id:privateRoomId});
+    console.log(privateRoomId);
+    this.router.navigate(['/chat',userClicked._id]);
+    //this.socketService.emit("knocKnock",privateRoomId)
+    //let loggedInUser
   }
 }

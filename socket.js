@@ -16,7 +16,6 @@ module.exports.onConnection = (socket, io) =>{
 
         //Ready Room
         socket.on('readyRoom',(data)=>{
-            console.log(socket);
             console.log(data);
             socket.join(data,err=>{
                 if(err) throw err;
@@ -29,6 +28,7 @@ module.exports.onConnection = (socket, io) =>{
     
         //handling messages
         socket.on('chat',(data)=>{
+            console.log(data);
             io.sockets.in(data.handle).emit('chat', data);
         });
     });

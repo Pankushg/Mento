@@ -3,8 +3,10 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Observable,of } from 'rxjs';
 import { UserChatService } from '../../services/user-chat.service';
+import { UsersListService } from '../../services/users-list.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { SocketService } from '../../services/socket.service';
+import { DataControllerService } from "../../services/data-controller.service";
 
 @Component({
   selector: 'app-user-chat',
@@ -24,59 +26,75 @@ export class UserChatComponent implements OnInit {
   userIds:Observable<any>;
   data:{message:string,handle:string};
   hero:Observable<[{name:'Pankush'},{name:'nidhi'}]>
+  loggedInUser : {_id:string,username:string};
+  clickedUser : {_id:string,username:string};
+
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private userChatService: UserChatService,
     private socketService: SocketService,
+    private dataControllerService : DataControllerService,
+    private usersListService : UsersListService, 
   ) {}
 
   ngOnInit() {
-    /* this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        return this.userChatService.getChats(params.get('id'));
-      })).subscribe(value => {
-        console.log("fdssdS"); 
-        console.log(value); 
-      if(value.success=='true'){
-      }else{}
-    }); */
+    this.userChatService.authenticateChatsRoute().subscribe(data=>{
+      this.loggedInUser = data.user;
+      console.log(data);
+      //Chat : authenticateSession >> verifyUserClickedId >> ValidateUserClickedId >> ifUserPresentInDB >>
+      //listenToTheparticularRooId
+      this.activatedRoute.paramMap.subscribe(params => { 
+        let id = params.get('id'); 
+        this.usersListService.getUsers(this.loggedInUser).subscribe(data=>{
+          console.log(data);
+          for(let user of data.users){
+            if(user._id===id) {
+              this.clickedUser=user;
+              break;
+            }
+          }
+          if(this.clickedUser!=undefined){
+            //setting room id for private chat
+            let privateRoomId = this.loggedInUser._id+" "+this.clickedUser._id;
 
-    this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        this.room=params.get('id');
-        return params.get('id2')
-      })).subscribe(value => {
-        console.log("fdssdS"); 
-        console.log(value); 
-      if(true){
-      }else{}
-    });
-
-    //Joinging Room
-    this.socketService.listen("joinRoom").subscribe((data)=>{
-      console.log(data + " Joined");
-    });
-    this.socketService.emit("joinRoom","");
-    this.socketService.listen("chat").subscribe((data:{message:string,handle:string})=>{
-      let fragment = document.createDocumentFragment(),
-        tempElement = document.createElement('div');
-      tempElement.innerHTML = "<div id='message'>" + data.message +"!</div>";
-      while (tempElement.firstChild) {
-        fragment.appendChild(tempElement.firstChild);
-      }
-      document.getElementById("chat-messages").appendChild(fragment)
-    });
-  }
-
-  getData(data):Observable<any>{
-    return of(this.hero);
+            //listening to messages in private chat
+            this.socketService.listen("chat").subscribe((data:{message:string,handle:string})=>{
+              console.log("OOLALALA");
+              let fragment = document.createDocumentFragment(),
+                tempElement = document.createElement('div');
+              tempElement.innerHTML = "<div id='message-r' style='text-align:left'>" + data.message +"</div>";
+              while (tempElement.firstChild) {
+                fragment.appendChild(tempElement.firstChild);
+              }
+              document.getElementById("chat-messages").appendChild(fragment);
+            });
+          } else{
+            console.log('Invalid Chat Request');
+            this.router.navigate(['register']);
+          }
+        });
+      });  
+    },err=>{
+      console.log(err);
+      this.router.navigate(['register'])
+      return false;
+    });      
   }
 
   sendMessage(){
     let message = this.chatForm.get('chatMessage').value
-    console.log(message);
-    this.socketService.emit("chat",{message:this.chatForm.get('chatMessage').value,handle:"dummyRoom"});
+    console.log(this.dataControllerService.getPrivateRoomId());
+    let fragment = document.createDocumentFragment(),
+        tempElement = document.createElement('div');
+      tempElement.innerHTML = "<div id='message-s' style='text-align:right'>" + message +"</div>";
+      while (tempElement.firstChild) {
+        fragment.appendChild(tempElement.firstChild);
+      }
+      document.getElementById("chat-messages").appendChild(fragment);
+      console.log(document)
+    this.socketService.emit("chat",
+    {message:this.chatForm.get('chatMessage').value,handle:this.dataControllerService.getPrivateRoomId().id});
   }
 }

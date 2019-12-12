@@ -3,7 +3,8 @@ const socket = require('socket.io');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const passport = require('passport')
 
 const register = require('./routes/register');
 const users = require('./routes/users');
@@ -27,6 +28,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //Cross Origin Access
 app.use(cors());
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./config/passport')(passport);
 
 app.use('/register',register);
 app.use('/users',users);

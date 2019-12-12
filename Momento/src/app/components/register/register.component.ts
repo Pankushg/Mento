@@ -4,6 +4,7 @@ import { RegisterService } from "../../services/register.service";
 import { RouterLink, RouteConfigLoadEnd, ActivatedRoute,Router } from '@angular/router';
 import { DataControllerService } from "../../services/data-controller.service";
 
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -36,6 +37,8 @@ export class RegisterComponent implements OnInit {
         if(data.success){
           this.dataControllerService.setLoggedInUserData({id: data.user._id, username: data.user.username});
           console.log(this.dataControllerService.getLoggedInUserData());
+          this.registerService.logout();
+          this.registerService.storeUserData(data.token, data.user);
           this.router.navigate(['usersList']);
           console.log(`${data.user.username} registered successfully`);
         } else {
